@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    background-color: black;
+    padding: 0;
+}
+
+.navebar{
+    height: 80px;
+    width: 100%;
+}
+.img1{
+    height: 150px;
+}
+
+.input1 {
+    position: fixed;
+    bottom: 20px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 60%;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    background-color: #3c3c3c;
+    display: flex;
+    align-items: center;
+  }
+
+  .input1 input {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    background-color: #3c3c3c;
+    color: #ffffff;
+    outline: none;
+  }
+
+  .submitIcone {
+    position: absolute;
+    right: 20px;
+    top: 55%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+
+  .material-icons {
+    color: #ffffff;
+    font-size: 24px;
+  }
+  .Image-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.generated-img {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    margin: 10px;
+    border-radius: 10px;
+}
