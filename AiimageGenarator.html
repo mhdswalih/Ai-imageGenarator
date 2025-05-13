@@ -3,26 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/img.css">
+    <link rel="stylesheet" href="./css/img.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <title>AI Image Generator</title>
+    <style>
+        /* Add this to your CSS for loading animation */
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #6366f1;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-   <nav>
-    <div class="navebar">
-      <img class="img1" src="/img/Screenshot_2024-09-18_222258-removebg-preview.png" alt="">
-    </div>
-   </nav>
+    <nav>
+        <div class="navbar">
+            <img class="logo" src="/img/Screenshot_2024-09-18_222258-removebg-preview.png" alt="Logo">
+            <h1>AI Image Generator</h1>
+        </div>
+    </nav>
 
-   <section class="Image-section"></section>
-   <section class="input-container"></section>
-   <div class="input1">
-    <input id="input-field" type="text" placeholder="Type your message here..."/>
-    <div class="submitIcon"><span class="material-icons">
-        send
-        </span></div>
-  </div>
-    
-  <script src="app.js"></script>
+    <main>
+        <section class="search-section">
+            <h2>Generate Amazing Images</h2>
+            <p>Turn your ideas into stunning images</p>
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <input id="input-field" type="text" placeholder="Describe the image you want to create..."/>
+                    <button class="submit-btn">
+                        <span class="material-icons">auto_awesome</span>
+                        Generate
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="image-section">
+            <div class="image-container">
+                <div class="loading-spinner" id="loading-spinner"></div>
+                <!-- Images will be inserted at the top here -->
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
 </body>
 </html>
