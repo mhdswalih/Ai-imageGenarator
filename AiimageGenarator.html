@@ -40,7 +40,7 @@
             <div class="input-container">
                 <div class="input-wrapper">
                     <input id="input-field" type="text" placeholder="Describe the image you want to create..."/>
-                    <button class="submit-btn">
+                    <button class="submit-btn" id="generate-btn">
                         <span class="material-icons">auto_awesome</span>
                         Generate
                     </button>
@@ -48,12 +48,8 @@
             </div>
         </section>
 
-        <section class="image-section">
-            <div class="image-container">
-                <div class="loading-spinner" id="loading-spinner"></div>
-                <!-- Images will be inserted at the top here -->
-            </div>
-        </section>
+        <div id="loading" class="loading-spinner"></div>
+        <div id="gallery" class="image-container"></div>
     </main>
 
     <script src="app.js"></script>

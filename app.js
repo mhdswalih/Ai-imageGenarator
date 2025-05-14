@@ -1,93 +1,104 @@
-const inputField = document.querySelector('#input-field');
-const submitBtn = document.querySelector('.submit-btn');
-const imageContainer = document.querySelector('.image-container');
+const apiKey = 'sk-bxCpLWZ4jShbvHRxvWIvO6rIBW6sYVGcoXUN0Jq6skxuyFI3'; // Get from https://platform.stability.ai/
+const endpoint = 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image';
 
-// Replace with your Pexels API key
-const API_KEY = 'Jq4xM6MYuhcjmzdbsmNrOfol4m6M2A2qvqkgfHxF7YJRVWV9C3hQIikq';
+const generateBtn = document.getElementById('generate-btn');
+const inputField = document.getElementById('input-field');
+const gallery = document.getElementById('gallery');
+const loading = document.getElementById('loading');
 
-const downloadImage = async (url) => {
+async function generateImage(prompt) {
     try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        const downloadUrl = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = downloadUrl;
-        a.download = `generated-image-${Date.now()}.jpg`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-        console.error('Download failed:', error);
-    }
-};
+        loading.style.display = 'block';
+        generateBtn.disabled = true;
 
-const createImageCard = (imageUrl, prompt) => {
-    const card = document.createElement('div');
-    card.className = 'image-card';
-    
-    card.innerHTML = `
-        <img src="${imageUrl}" alt="${prompt}" class="generated-img">
-        <div class="image-actions">
-            <span class="prompt-text">${prompt}</span>
-            <button class="download-btn" onclick="downloadImage('${imageUrl}')">
-                <span class="material-icons">download</span>
-                Download
-            </button>
-        </div>
-    `;
-    
-    return card;
-};
-
-const getImage = async () => {
-    const prompt = inputField.value.trim();
-    if (!prompt) {
-        alert('Please enter a description');
-        return;
-    }
-
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="material-icons">hourglass_empty</span> Generating...';
-
-    try {
-        const response = await fetch(
-            `https://api.pexels.com/v1/search?query=${encodeURIComponent(prompt)}&per_page=1`,
-            {
-                headers: {
-                    'Authorization': API_KEY
-                }
-            }
-        );
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                text_prompts: [{
+                    text: prompt,
+                    weight: 1
+                }],
+                cfg_scale: 7,
+                height: 1024,
+                width: 1024,
+                steps: 30,
+                samples: 1
+            })
+        });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            const error = await response.json();
+            throw new Error(`API Error: ${error.message}`);
         }
 
-        const data = await response.json();
+        const result = await response.json();
         
-        if (data.photos.length === 0) {
-            alert('No images found. Try a different description.');
-            return;
-        }
+        if (result.artifacts && result.artifacts.length > 0) {
+            const image = result.artifacts[0];
+            
+            const imageCard = document.createElement('div');
+            imageCard.className = 'image-card';
+            
+            // Convert base64 to image URL
+            const imageUrl = `data:image/png;base64,${image.base64}`;
+            
+            imageCard.innerHTML = `
+                <img src="${imageUrl}" alt="${prompt}" class="generated-img"/>
+                <div class="image-info">
+                    <p>${prompt}</p>
+                    <button class="download-btn" onclick="downloadImage('${imageUrl}')">
+                        <span class="material-icons">download</span>
+                    </button>
+                </div>
+            `;
 
-        const photo = data.photos[0];
-        const imageCard = createImageCard(photo.src.large, prompt);
-        imageContainer.insertBefore(imageCard, imageContainer.firstChild);
-        inputField.value = '';
+            gallery.insertBefore(imageCard, gallery.firstChild);
+            inputField.value = '';
+        } else {
+            throw new Error('No image generated');
+        }
 
     } catch (error) {
         console.error('Error:', error);
         alert('Failed to generate image. Please try again.');
     } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span class="material-icons">auto_awesome</span> Generate';
+        loading.style.display = 'none';
+        generateBtn.disabled = false;
     }
-};
+}
 
-submitBtn.addEventListener('click', getImage);
+// Update download function to handle URLs
+function downloadImage(imageUrl) {
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = `generated-image-${Date.now()}.jpg`;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+generateBtn.addEventListener('click', () => {
+    const prompt = inputField.value.trim();
+    if (prompt) {
+        generateImage(prompt);
+    } else {
+        alert('Please enter a description');
+    }
+});
+
 inputField.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') {
-        getImage();
+        const prompt = inputField.value.trim();
+        if (prompt) {
+            generateImage(prompt);
+        } else {
+            alert('Please enter a description');
+        }
     }
 });
