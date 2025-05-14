@@ -1,4 +1,4 @@
-const apiKey = 'sk-bxCpLWZ4jShbvHRxvWIvO6rIBW6sYVGcoXUN0Jq6skxuyFI3'; // Get from https://platform.stability.ai/
+const apiKey = 'sk-89MURfF48O870siCEFUiu6bnGfirBoKWj596USLHCkVYkGDD'; // Get from https://platform.stability.ai/
 const endpoint = 'https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/text-to-image';
 
 const generateBtn = document.getElementById('generate-btn');
